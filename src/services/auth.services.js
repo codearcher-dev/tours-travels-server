@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import SessionModel from '../models/session.schema.js';
 
 export const generateAccessToken = ({ name, email, id }) => {
     const payload = { name, email, id };
@@ -38,8 +39,21 @@ export const verifyPassword = (password, hashedPassword) => {
 }
 
 export const authenticateAdmin = async (req, res, admin) => {
-    const accessToken = generateAccessToken({ name: admin.name, email: admin.email, id: admin._id });
-    const refreshToken = generateRefreshToken({ sessionId: req.session.id });
+    const sessionId = generateSessionId();
+
+    const session = await SessionModel.create({
+        sessionId,
+        userAgent: req.headers['user-agent'],
+        ip: req.ip,
+        email: admin.email,
+    })
+    const accessToken = generateAccessToken({
+        name: admin.name,
+        email: admin.email,
+        id: admin._id
+    });
+
+    const refreshToken = generateRefreshToken({ sessionId });
 
     const baseConfig = {
         httpOnly: true,

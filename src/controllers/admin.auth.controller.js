@@ -28,11 +28,9 @@ export const loginAdmin = async (req, res) => {
             return res.status(404).json({ message: "Invalid credentials" });
         }
 
-        console.log("log 1")
         if (!verifyPassword(password, admin.password)) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
-        console.log("log 2")
 
         const { accessToken, refreshToken } = await authenticateAdmin(req, res, admin);
         res.status(200).json({ message: "Login successful", accessToken, refreshToken });
