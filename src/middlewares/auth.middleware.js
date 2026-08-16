@@ -1,4 +1,5 @@
-import { refreshTokens, verifyJwtToken } from "../services/auth.services.js";
+import { refreshTokens } from "../services/auth.services.js";
+import { verifyJwtToken } from "../services/jwt.services.js";
 
 const verifyAuthentication = (req, res, next) => {
     const accessToken = req.cookies.access_token;

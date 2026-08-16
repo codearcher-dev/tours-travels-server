@@ -56,6 +56,6 @@ const packageSchema = new mongoose.Schema({
     slug: { type: String }
 }, { timestamps: true })
 
-const packageModel = mongoose.model("package", packageSchema);
+const PackageModel = mongoose.model("package", packageSchema);
 
-export default packageModel;
+export default PackageModel;

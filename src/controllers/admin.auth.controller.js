@@ -1,18 +1,20 @@
 import AdminModel from "../models/admin.schema.js";
-import { authenticateAdmin, hashPassword, verifyPassword } from "../services/auth.services.js";
+import { createAdmin, getAdminByEmail, getAllAdmins } from "../services/admin.services.js";
+import { authenticateAdmin } from "../services/auth.services.js";
+import { verifyPassword } from "../services/bcrypt.services.js";
 
-export const createAdmin = async (req, res) => {
+export const registerAdmin = async (req, res) => {
     const { name, email, password } = req.body;
-    if ((await AdminModel.find()).length >= 2) {
+    if ((await getAllAdmins()).length >= 2) {
         res.status(201).json({ message: "Maximum No. of Admins reached" });
     }
 
     try {
-        const adminExist = await AdminModel.findOne({ email });
+        const adminExist = await getAdminByEmail(email);
         if (adminExist) {
             return res.status(401).json({ message: "Admin already exist" });
         }
-        const admin = await AdminModel.create({ name, email, password: hashPassword(password) });
+        const admin = await createAdmin(name, email, password);
         res.status(201).json({ message: "Admin created successfully", admin });
     } catch (error) {
         res.status(500).json({ message: "Error creating admin", error: error.message });
@@ -23,7 +25,7 @@ export const loginAdmin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const admin = await AdminModel.findOne({ email });
+        const admin = await getAdminByEmail(email);
         if (!admin) {
             return res.status(404).json({ message: "Invalid credentials" });
         }
