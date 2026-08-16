@@ -7,6 +7,7 @@ import session from 'express-session';
 import connectDB from './config/db.js';
 import packageRouter from './routes/package.routes.js';
 import adminAuthRouter from './routes/admin.auth.routes.js';
+import verifyAuthentication from './middlewares/auth.middleware.js';
 
 dotenv.config();
 

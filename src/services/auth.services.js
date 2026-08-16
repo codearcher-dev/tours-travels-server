@@ -2,9 +2,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import SessionModel from '../models/session.schema.js';
+import { findSessionById } from './session.services.js';
 
-export const generateAccessToken = ({ name, email, id }) => {
-    const payload = { name, email, id };
+export const generateAccessToken = ({ name, email, _id, sessionId }) => {
+    const payload = { name, email, _id, sessionId };
     const secret = process.env.JWT_SECRET;
     const options = { expiresIn: '30m' }; // Token expires in 30 minutes
     return jwt.sign(payload, secret, options);
@@ -48,9 +49,10 @@ export const authenticateAdmin = async (req, res, admin) => {
         email: admin.email,
     })
     const accessToken = generateAccessToken({
+        _id: admin._id,
         name: admin.name,
         email: admin.email,
-        id: admin._id
+        sessionId: session.sessionId
     });
 
     const refreshToken = generateRefreshToken({ sessionId });
@@ -66,33 +68,33 @@ export const authenticateAdmin = async (req, res, admin) => {
     return { accessToken, refreshToken };
 }
 
-// export const refreshTokens = async (refreshToken) => {
-//     try {
-//         const decodedToken = verifyJwtToken(refreshToken)
-//         const currentSession = await findSessionById(decodedToken.sessionId)
+export const refreshTokens = async (refreshToken) => {
+    try {
+        const decodedToken = verifyJwtToken(refreshToken)
+        const currentSession = await findSessionById(decodedToken.sessionId)
 
-//         if (!currentSession) {
-//             throw new Error("Invalid session")
-//         }
+        if (!currentSession) {
+            throw new Error("Invalid session")
+        }
 
-//         const user = await getUserByEmail(currentSession.email)
+        const user = await getAdminByEmail(currentSession.email);
 
-//         if (!user) throw new Error("Invalid user");
+        if (!user) throw new Error("Invalid user");
 
-//         const userData = {
-//             _id: user._id,
-//             name: user.name,
-//             email: user.email,
-//             sessionId: currentSession.sessionId,
-//         }
+        const userData = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            sessionId: currentSession.sessionId,
+        }
 
-//         const newAccessToken = createAccessToken(userData)
-//         const newRefreshToken = createRefreshToken({ sessionId: currentSession.sessionId })
+        const newAccessToken = generateAccessToken(userData)
+        const newRefreshToken = generateRefreshToken({ sessionId: currentSession.sessionId })
 
-//         return { newAccessToken, newRefreshToken, user: userData }
+        return { newAccessToken, newRefreshToken, user: userData }
 
-//     }
-//     catch (error) {
-//         throw new Error("Error generating new tokens: ", error);
-//     }
-// }
+    }
+    catch (error) {
+        throw new Error("Error generating new tokens: ", error);
+    }
+}
