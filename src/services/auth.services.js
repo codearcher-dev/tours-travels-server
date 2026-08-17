@@ -1,12 +1,12 @@
 import SessionModel from '../models/session.schema.js';
-import { findSessionById, generateSessionId } from './session.services.js';
+import { createSession, findSessionById, generateSessionId } from './session.services.js';
 import { generateAccessToken, generateRefreshToken, verifyJwtToken } from './jwt.services.js';
 import { getAdminByEmail } from './admin.services.js';
 
 export const authenticateAdmin = async (req, res, admin) => {
     const sessionId = generateSessionId();
 
-    const session = await SessionModel.create({
+    const session = await createSession({
         sessionId,
         userAgent: req.headers['user-agent'],
         ip: req.ip,
