@@ -14,3 +14,8 @@ export const findPackageById = async (id) => {
     const pkg = await PackageModel.findById(id);
     return pkg;
 }
+
+export const updatePackageById = async (id, data) => {
+    const updatedPkg = await PackageModel.findByIdAndUpdate(id, data);
+    return updatedPkg;
+}
