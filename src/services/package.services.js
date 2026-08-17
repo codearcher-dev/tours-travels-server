@@ -19,3 +19,8 @@ export const updatePackageById = async (id, data) => {
     const updatedPkg = await PackageModel.findByIdAndUpdate(id, data);
     return updatedPkg;
 }
+
+export const deletePackageById = async (id) => {
+    const deletedPackage = await PackageModel.findByIdAndDelete(id);
+    return deletedPackage;
+}

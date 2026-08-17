@@ -1,5 +1,5 @@
 import packageModel from "../models/packages.schema.js";
-import { createNewPackage, findAllPackages, findPackageById, updatePackageById } from "../services/package.services.js";
+import { createNewPackage, deletePackageById, findAllPackages, findPackageById, updatePackageById } from "../services/package.services.js";
 
 export const createPackage = async (req, res) => {
     const { name, location, duration, destinations, price, description, img, images } = req.body;
@@ -53,6 +53,16 @@ export const modifyPackage = async (req, res) => {
         return res.status(200).json({ message: "Package updated successfully", package: pkg });
     } catch (error) {
         return res.status(500).json({ message: "Error updating package", error: error.message });
+    }
+}
+
+export const deletePackage = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const pkg = await deletePackageById(id);
+        return res.status(200).json({ message: "Package deleted successfully", package: pkg });
+    } catch (error) {
+        return res.status(500).json({ message: "Error deleting package", error: error.message });
     }
 }
 
