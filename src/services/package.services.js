@@ -16,7 +16,7 @@ export const findPackageById = async (id) => {
 }
 
 export const updatePackageById = async (id, data) => {
-    const updatedPkg = await PackageModel.findByIdAndUpdate(id, data);
+    const updatedPkg = await PackageModel.findByIdAndUpdate(id, data, { returnDocument: "after" });
     return updatedPkg;
 }
 

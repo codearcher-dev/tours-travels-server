@@ -2,7 +2,7 @@ import packageModel from "../models/packages.schema.js";
 import { createNewPackage, deletePackageById, findAllPackages, findPackageById, updatePackageById } from "../services/package.services.js";
 
 export const createPackage = async (req, res) => {
-    const { name, location, duration, destinations, price, description, img, images } = req.body;
+    const { name, location, duration, destinations, price, description, img, images, inclusions, exclusions, itinerary } = req.body;
     if (!name || !location || !duration || !destinations || !price || !description || !img || !images) {
         return res.status(400).json({ message: "All fields are required" });
     }
@@ -15,6 +15,9 @@ export const createPackage = async (req, res) => {
         description,
         img,
         images,
+        inclusions,
+        exclusions,
+        itinerary,
         slug: name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
     };
 
