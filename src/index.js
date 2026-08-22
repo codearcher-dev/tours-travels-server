@@ -8,6 +8,7 @@ import connectDB from './config/db.js';
 import packageRouter from './routes/package.routes.js';
 import adminAuthRouter from './routes/admin.auth.routes.js';
 import verifyAuthentication from './middlewares/auth.middleware.js';
+import destinationRouter from './routes/destination.routes.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use(session({
 
 app.use("/api/packages", packageRouter);
 app.use("/api/admin", adminAuthRouter);
+app.use("/api/destinations", destinationRouter);
 
 const port = process.env.PORT || 3000;
 

@@ -32,7 +32,7 @@ export const createPackage = async (req, res) => {
 export const getAllPackages = async (req, res) => {
     try {
         const pkgs = await findAllPackages();
-        return res.status(200).json({ message: "Packages fetched successfully", packages: pkgs });
+        return res.status(200).json({ message: "Packages fetched successfully", count: pkgs.length, packages: pkgs });
     } catch (error) {
         return res.status(500).json({ message: "Error fetching packages", error: error.message });
     }
