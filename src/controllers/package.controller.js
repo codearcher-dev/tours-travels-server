@@ -18,7 +18,9 @@ export const createPackage = async (req, res) => {
         inclusions,
         exclusions,
         itinerary,
-        slug: name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+        slug: name.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-') // Replace all symbols and spaces with a hyphen
+            .replace(/^-+|-+$/g, '')    // Remove leading and trailing hyphens (optional but recommended)
     };
 
     try {
