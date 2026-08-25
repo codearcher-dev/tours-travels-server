@@ -11,8 +11,9 @@ export const handleCreateEnquiry = async (req, res) => {
 }
 
 export const handleRemoveEnquiry = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
 
+    console.log(id);
     try {
         const enquiry = await deleteEnquiry(id);
         return res.status(200).json({ message: "Enquiry deleted", enquiry });
@@ -21,17 +22,19 @@ export const handleRemoveEnquiry = async (req, res) => {
     }
 }
 export const handleGetEnquiries = async (req, res) => {
-    const { limit, offset, status } = req.query;
+    const { limit, offset, status, search } = req.query;
+
+    console.log(req.query);
 
     try {
-        const enquiries = await findEnquiry(limit, offset, status);
+        const enquiries = await findEnquiry(limit, offset, status, search);
         return res.status(200).json({ message: "Enquiry feched", count: enquiries.length, enquiries });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 }
 export const handleUpdateStatus = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     try {
         const enquiry = await updateEnquiryStatus(id);
         return res.status(200).json({ message: "Status updated", enquiry });

@@ -5,8 +5,8 @@ const router = Router();
 
 router.route("/").get(handleGetEnquiries);
 router.route("/").post(handleCreateEnquiry);
-router.route("/").patch(handleUpdateStatus);
-router.route("/").delete(handleRemoveEnquiry);
+router.route("/:id").patch(handleUpdateStatus);
+router.route("/:id").delete(handleRemoveEnquiry);
 
 const enquiryRouter = router;
 

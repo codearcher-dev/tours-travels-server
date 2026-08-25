@@ -5,8 +5,22 @@ export const createEnquiry = async (data) => {
     return enquiry;
 }
 
-export const findEnquiry = async (limit, offset, status) => {
-    const enquiries = await EnquiryModel.find(status && { status }).limit(limit).skip(offset);
+export const findEnquiry = async (limit, offset, status, search) => {
+    const filter = {};
+
+    if (status && status.trim() !== '') {
+        filter.status = status.trim();
+    }
+
+    if (search && search.trim !== '') {
+        const regex = { $regex: search.trim(), $options: 'i' };
+
+        filter.$or = [
+            { name: regex },
+            { package: regex }
+        ]
+    }
+    const enquiries = await EnquiryModel.find(filter).limit(limit).skip(offset);
     return enquiries;
 }
 
