@@ -1,3 +1,4 @@
+import { upload } from "../services/cloudinary.services.js";
 import { createDestination, deleteDestinationById, findDestinationById, findDestinations, updateDestinationById } from "../services/destination.services.js"
 
 export const getAllDestinations = async (req, res) => {
@@ -20,8 +21,10 @@ export const getSingleDestination = async (req, res) => {
 
 export const createNewDestination = async (req, res) => {
     const data = req.body;
+
     try {
-        const destination = await createDestination(data);
+        const images = await upload(req);
+        const destination = await createDestination({ ...data, images });
         return res.status(200).json({ message: "Destination created successfully", destination });
     } catch (error) {
         return res.status(500).json({ message: error.message });

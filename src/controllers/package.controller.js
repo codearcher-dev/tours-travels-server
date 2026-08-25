@@ -1,29 +1,31 @@
 import packageModel from "../models/packages.schema.js";
+import { upload } from "../services/cloudinary.services.js";
 import { createNewPackage, deletePackageById, findAllPackages, findPackageById, updatePackageById } from "../services/package.services.js";
 
 export const createPackage = async (req, res) => {
-    const { name, location, duration, destinations, price, description, img, images, inclusions, exclusions, itinerary } = req.body;
-    if (!name || !location || !duration || !destinations || !price || !description || !img || !images) {
-        return res.status(400).json({ message: "All fields are required" });
+    const { name, location, duration, destinations, price, description, inclusions, exclusions, itinerary } = req.body;
+    if (!name || !location || !duration || !destinations || !price || !description) {
+        return res.status(400).json({ message: "Please fill the required fields" });
     }
-    const newPackage = {
-        name,
-        location,
-        duration,
-        destinations,
-        price,
-        description,
-        img,
-        images,
-        inclusions,
-        exclusions,
-        itinerary,
-        slug: name.toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-') // Replace all symbols and spaces with a hyphen
-            .replace(/^-+|-+$/g, '')    // Remove leading and trailing hyphens (optional but recommended)
-    };
 
     try {
+        const images = await upload(req);
+        const newPackage = {
+            name,
+            location,
+            duration,
+            destinations,
+            price,
+            description,
+            img: images[0],
+            images: images,
+            inclusions,
+            exclusions,
+            itinerary,
+            slug: name.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-') // Replace all symbols and spaces with a hyphen
+                .replace(/^-+|-+$/g, '')    // Remove leading and trailing hyphens (optional but recommended)
+        };
         const pkg = await createNewPackage(newPackage);
         return res.status(201).json({ message: "Package created successfully", package: pkg });
     } catch (error) {
