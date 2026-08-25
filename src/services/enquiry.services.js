@@ -6,7 +6,7 @@ export const createEnquiry = async (data) => {
 }
 
 export const findEnquiry = async (limit, offset, status) => {
-    const enquiries = await EnquiryModel.find({ status }).limit(limit).offset(offset);
+    const enquiries = await EnquiryModel.find(status && { status }).limit(limit).skip(offset);
     return enquiries;
 }
 
@@ -15,7 +15,7 @@ export const deleteEnquiry = async (id) => {
     return enquiry;
 }
 
-export const updateEnquiryStatus = async () => {
+export const updateEnquiryStatus = async (id) => {
     const enquiry = await EnquiryModel.findByIdAndUpdate(id, {
         $set: {
             status: "completed"

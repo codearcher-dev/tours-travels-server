@@ -25,14 +25,15 @@ export const handleGetEnquiries = async (req, res) => {
 
     try {
         const enquiries = await findEnquiry(limit, offset, status);
-        return res.status(200).json({ message: "Enquiry feched", enquiries });
+        return res.status(200).json({ message: "Enquiry feched", count: enquiries.length, enquiries });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 }
 export const handleUpdateStatus = async (req, res) => {
+    const { id } = req.query;
     try {
-        const enquiry = await updateEnquiryStatus();
+        const enquiry = await updateEnquiryStatus(id);
         return res.status(200).json({ message: "Status updated", enquiry });
     } catch (error) {
         return res.status(500).json({ message: error.message });
