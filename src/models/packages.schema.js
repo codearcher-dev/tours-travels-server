@@ -35,7 +35,7 @@ const packageSchema = new mongoose.Schema({
         discounted: { type: Number, required: true }
     },
     img: { url: { type: String, required: true }, publicId: { type: String } },
-    images: [{ url: { type: String }, publicId: { type: String } }],
+    images: [{ url: { type: String }, publicId: { type: String }, _id: false }],
     destinations: [{ type: String, trim: true }],
     inclusions: [{ type: String, trim: true }], // Inclusions
     exclusions: [{ type: String, trim: true }],
