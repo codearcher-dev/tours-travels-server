@@ -10,6 +10,7 @@ import adminAuthRouter from './routes/admin.auth.routes.js';
 import verifyAuthentication from './middlewares/auth.middleware.js';
 import destinationRouter from './routes/destination.routes.js';
 import feedbackRouter from './routes/feedback.routes.js';
+import enquiryRouter from './routes/enquiry.routes.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use("/api/packages", packageRouter);
 app.use("/api/admin", adminAuthRouter);
 app.use("/api/destinations", destinationRouter);
 app.use("/api/feedback", feedbackRouter);
+app.use("/api/enquiry", enquiryRouter);
 
 const port = process.env.PORT || 3000;
 
