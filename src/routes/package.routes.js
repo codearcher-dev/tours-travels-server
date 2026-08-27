@@ -7,7 +7,7 @@ const router = Router();
 router.route("/").post(upload.array('images', 10), createPackage);
 router.route("/").get(getAllPackages);
 router.route("/:id").get(getOnePackage);
-router.route("/:id").patch(modifyPackage);
+router.route("/:id").patch(upload.array('images', 10), modifyPackage);
 router.route("/:id").delete(deletePackage);
 
 const packageRouter = router;

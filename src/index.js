@@ -31,9 +31,9 @@ app.use(session({
 
 //Verifyauthentication middleware not implemented yet
 
-app.use("/api/packages", packageRouter);
+app.use("/api/package", packageRouter);
 app.use("/api/admin", adminAuthRouter);
-app.use("/api/destinations", destinationRouter);
+app.use("/api/destination", destinationRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/enquiry", enquiryRouter);
 

@@ -24,3 +24,10 @@ export const deletePackageById = async (id) => {
     const deletedPackage = await PackageModel.findByIdAndDelete(id);
     return deletedPackage;
 }
+
+export const findPublicIds = async (id) => {
+    const pkg = await PackageModel.findById(id).select("images.publicId");
+    const publicIds = [];
+    pkg.images.forEach(i => publicIds.push(i.publicId));
+    return publicIds;
+}
