@@ -81,7 +81,7 @@ export const modifyPackage = async (req, res) => {
         return res.status(200).json({ message: "Package updated successfully", package: pkg });
     } catch (error) {
         console.error("Error Updating Package : ", error.message)
-        return res.status(500).json({ message: "Error updating package", error: error.message });
+        return res.status(500).json({ message: "Error updating package", error: error });
     }
 }
 

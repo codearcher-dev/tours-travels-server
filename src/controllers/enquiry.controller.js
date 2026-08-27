@@ -1,7 +1,8 @@
-import { createEnquiry, deleteEnquiry, findEnquiry, updateEnquiryStatus } from "../services/enquiry.services.js";
+import { countEnquiryWithStatus, createEnquiry, deleteEnquiry, findEnquiry, updateEnquiryStatus } from "../services/enquiry.services.js";
 
 export const handleCreateEnquiry = async (req, res) => {
     const data = req.body;
+    console.log(data);
     try {
         const enquiry = await createEnquiry(data);
         return res.status(201).json({ message: "Enquiry created", enquiry });
@@ -38,6 +39,16 @@ export const handleUpdateStatus = async (req, res) => {
     try {
         const enquiry = await updateEnquiryStatus(id);
         return res.status(200).json({ message: "Status updated", enquiry });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export const handleCountEnquiries = async (req, res) => {
+    const { status } = req.params;
+    try {
+        const count = await countEnquiryWithStatus(status);
+        return res.status(200).json({ message: "Counted successfully", count });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }

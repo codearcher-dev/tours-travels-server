@@ -38,3 +38,9 @@ export const updateEnquiryStatus = async (id) => {
 
     return enquiry;
 }
+
+export const countEnquiryWithStatus = async (status) => {
+    const count = await EnquiryModel.countDocuments({ status: status });
+    return count;
+}
+
