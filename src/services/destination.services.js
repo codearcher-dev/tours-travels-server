@@ -24,3 +24,10 @@ export const updateDestinationById = async (id, data) => {
     const dest = await DestinationModel.findByIdAndUpdate(id, data, { returnDocument: "after" });
     return dest;
 }
+
+export const findPublicIds = async (id) => {
+    const pkg = await DestinationModel.findById(id).select("images.publicId");
+    const publicIds = [];
+    pkg.images.forEach(i => publicIds.push(i.publicId));
+    return publicIds;
+}

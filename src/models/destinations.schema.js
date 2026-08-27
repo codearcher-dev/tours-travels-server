@@ -11,6 +11,7 @@ const destinationSchema = new mongoose.Schema({
     images: [{
         url: { type: String },
         publicId: { type: String },
+        _id: false
     }]
 }, { timestamps: true });
 

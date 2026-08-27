@@ -7,7 +7,7 @@ const router = Router();
 router.route("/").get(getAllDestinations);
 router.route("/").post(upload.array('images', 10), createNewDestination);
 router.route("/:id").get(getSingleDestination);
-router.route("/:id").patch(updateDestination);
+router.route("/:id").patch(upload.array('images', 10), updateDestination);
 router.route("/:id").delete(removeDestination);
 
 const destinationRouter = router;
