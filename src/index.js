@@ -20,7 +20,7 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: 'https://tours-travels-react.onrender.com', credentials: true }));
 app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET,
