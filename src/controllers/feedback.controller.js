@@ -14,7 +14,6 @@ export const getFeedbacks = async (req, res) => {
     const { limit, offset } = req.query;
     try {
         const feedbacks = await findFeedbacks(limit, offset);
-        console.log(feedbacks);
         return res.status(200).json({ message: "Feedback fetched successfully", count: feedbacks.length, feedbacks })
     } catch (error) {
         return res.status(500).json({ message: error.message });

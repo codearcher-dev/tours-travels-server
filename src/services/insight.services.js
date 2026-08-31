@@ -30,9 +30,31 @@ export const updateInsightField = async (field) => {
 };
 
 export const getSightByDateRange = async (startDate, endDate) => {
-    const insights = await InsightModel.find({ createdAt: { $gte: startDate || 604800000, $lte: endDate || Date.now() } })
+    // 1. Resolve start date (default to 7 days ago if missing)
+    const start = startDate
+        ? new Date(startDate)
+        : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    // 2. Resolve end date (default to now if missing)
+    const end = endDate
+        ? new Date(endDate)
+        : new Date();
+
+    // 3. Optional but recommended: Adjust end date to the very end of that day 
+    // if it's passed as a YYYY-MM-DD string without time components.
+    if (endDate && typeof endDate === 'string' && !endDate.includes('T')) {
+        end.setHours(23, 59, 59, 999);
+    }
+
+    // 4. Query the database
+    const insights = await InsightModel.find({
+        createdAt: {
+            $gte: start,
+            $lte: end
+        }
+    });
     return insights;
-}
+};
 
 
 export const storeGlobalStat = async () => {

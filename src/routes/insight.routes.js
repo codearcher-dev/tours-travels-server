@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createInsight, getInsights, handleInitialLoad, handlePageVisit, handleWhatsappClick } from "../controllers/insight.controller.js";
+import { createInsight, getGlobalStat, getInsights, handleInitialLoad, handlePageVisit, handleWhatsappClick } from "../controllers/insight.controller.js";
 
 const router = Router();
 
@@ -8,6 +8,7 @@ router.route("/new").post(createInsight);
 router.route("/").get(getInsights);
 router.route("/click").patch(handleWhatsappClick);
 router.route("/visit").patch(handlePageVisit);
+router.route("/global").get(getGlobalStat);
 
 const insightRouter = router;
 
