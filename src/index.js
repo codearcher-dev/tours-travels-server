@@ -3,6 +3,7 @@ import express from 'express';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import cron from 'node-cron';
 
 import connectDB from './config/db.js';
 import packageRouter from './routes/package.routes.js';
@@ -14,6 +15,8 @@ import enquiryRouter from './routes/enquiry.routes.js';
 
 import { upload } from "./config/cloudinary.js"
 import uploadToCloudinary from './utils/uploadToCloudinary.js';
+import insightRouter from "./routes/insight.routes.js";
+import { storeInsight } from "./services/insight.services.js";
 
 const app = express();
 connectDB();
@@ -36,47 +39,19 @@ app.use("/api/admin", adminAuthRouter);
 app.use("/api/destination", destinationRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/enquiry", enquiryRouter);
+app.use("/api/insight", insightRouter);
 
 
 
-
-
-// Multiple images upload route (up to 10 images)
-app.post('/api/upload/multiple', upload.array('images', 10), async (req, res) => {
-    console.log("Multiple Upload")
+// Schedule a task to run every 12 AM
+cron.schedule('0 0 0 * * *', async () => {
     try {
-        if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ error: 'Please select at least one image.' });
-        }
-
-        const uploadPromises = req.files.map((file) =>
-            uploadToCloudinary(file.buffer, 'gallery_images')
-        );
-
-        const results = await Promise.all(uploadPromises);
-
-        return res.status(200).json({
-            message: 'Images uploaded successfully',
-            count: results.length,
-            data: results
-        });
+        const insight = await storeInsight();
+        console.log(insight);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.error(error)
     }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
+}, { timezone: 'Asia/Kolkata' });
 
 
 

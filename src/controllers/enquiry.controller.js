@@ -1,10 +1,15 @@
 import { countEnquiryWithStatus, createEnquiry, deleteEnquiry, findEnquiry, updateEnquiryStatus } from "../services/enquiry.services.js";
+import { updateGlobalStatField, updateInsightField } from "../services/insight.services.js";
 
 export const handleCreateEnquiry = async (req, res) => {
     const data = req.body;
     console.log(data);
     try {
         const enquiry = await createEnquiry(data);
+        if (enquiry) {
+            await updateInsightField("enquiryClicks.form");
+            await updateGlobalStatField("enquiries");
+        }
         return res.status(201).json({ message: "Enquiry created", enquiry });
     } catch (error) {
         return res.status(500).json({ message: error.message });

@@ -1,5 +1,6 @@
 import { upload } from "../services/cloudinary.services.js";
 import { createDestination, deleteDestinationById, findDestinationById, findDestinations, findPublicIds, updateDestinationById } from "../services/destination.services.js"
+import { updateGlobalStatField } from "../services/insight.services.js";
 import { deleteImages } from "../utils/deleteFromCloudinary.js";
 
 export const getAllDestinations = async (req, res) => {
@@ -40,6 +41,9 @@ export const createNewDestination = async (req, res) => {
         }
 
         const destination = await createDestination(data);
+        if (destination) {
+            await updateGlobalStatField("destinations");
+        }
         console.log("success");
         return res.status(200).json({ message: "Destination created successfully", destination });
     } catch (error) {

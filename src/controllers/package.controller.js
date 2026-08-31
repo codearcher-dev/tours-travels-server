@@ -1,5 +1,6 @@
 import packageModel from "../models/packages.schema.js";
 import { upload } from "../services/cloudinary.services.js";
+import { updateGlobalStatField } from "../services/insight.services.js";
 import { createNewPackage, deletePackageById, findAllPackages, findPackageById, findPublicIds, updatePackageById } from "../services/package.services.js";
 import { deleteImages } from "../utils/deleteFromCloudinary.js";
 
@@ -32,6 +33,9 @@ export const createPackage = async (req, res) => {
                 .replace(/^-+|-+$/g, '')    // Remove leading and trailing hyphens (optional but recommended)
         };
         const pkg = await createNewPackage(newPackage);
+        if (pkg) {
+            await updateGlobalStatField("packages");
+        }
         return res.status(201).json({ message: "Package created successfully", package: pkg });
     } catch (error) {
         console.error("Error creating Package : ", error.message)
