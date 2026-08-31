@@ -6,7 +6,7 @@ export const createDestination = async (data) => {
 }
 
 export const findDestinations = async () => {
-    const dest = await DestinationModel.find();
+    const dest = await DestinationModel.find().sort({ createdAt: -1 });
     return dest;
 }
 

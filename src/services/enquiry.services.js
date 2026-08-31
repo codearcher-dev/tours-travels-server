@@ -20,7 +20,7 @@ export const findEnquiry = async (limit, offset, status, search) => {
             { package: regex }
         ]
     }
-    const enquiries = await EnquiryModel.find(filter).limit(limit).skip(offset);
+    const enquiries = await EnquiryModel.find(filter).sort({ createdAt: -1 }).limit(limit).skip(offset);
     return enquiries;
 }
 

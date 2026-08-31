@@ -1,7 +1,7 @@
 import FeedbackModel from "../models/feedback.schema.js";
 
 export const findFeedbacks = async (limit, offset) => {
-    const feedbacks = await FeedbackModel.find().limit(limit).skip(offset).populate("package", "name");
+    const feedbacks = await FeedbackModel.find().sort({ createdAt: -1 }).limit(limit).skip(offset).populate("package", "name");
     return feedbacks;
 }
 

@@ -6,7 +6,7 @@ export const createNewPackage = async (newPackage) => {
 }
 
 export const findAllPackages = async () => {
-    const pkgs = await PackageModel.find();
+    const pkgs = await PackageModel.find().sort({ createdAt: -1 });
     return pkgs;
 }
 
