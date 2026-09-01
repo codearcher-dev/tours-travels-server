@@ -5,17 +5,24 @@ import { createNewPackage, deletePackageById, findAllPackages, findPackageById, 
 import { deleteImages } from "../utils/deleteFromCloudinary.js";
 
 export const createPackage = async (req, res) => {
-    const { name, location, duration, destinations, price, description, inclusions, exclusions, itinerary } = JSON.parse(req.body.data);
+    const { name, location, duration, destinations, price, description, inclusions, exclusions, itinerary, isActive } = JSON.parse(req.body.data);
     if (!name || !location || !duration || !destinations || !price || !description) {
         return res.status(400).json({ message: "Please fill the required fields" });
     }
 
     try {
-        const images = req.files ? await upload(req) : [];
+        const images = req.files && req.files.images ? await upload(req.files.images) : [];
         images.forEach((img) => {
             img.publicId = img.public_id;
             delete img.public_id;
         });
+
+        const thumbnail = req.files && req.files.thumbnail ? await upload(req.files.thumbnail) : [];
+        thumbnail.forEach((img) => {
+            img.publicId = img.public_id;
+            delete img.public_id;
+        });
+
         const newPackage = {
             name,
             location,
@@ -23,11 +30,12 @@ export const createPackage = async (req, res) => {
             destinations,
             price,
             description,
-            img: images[0] || {},
+            img: thumbnail[0] || {},
             images: images,
             inclusions,
             exclusions,
             itinerary,
+            isActive,
             slug: name.toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-') // Replace all symbols and spaces with a hyphen
                 .replace(/^-+|-+$/g, '')    // Remove leading and trailing hyphens (optional but recommended)
@@ -45,7 +53,7 @@ export const createPackage = async (req, res) => {
 
 export const modifyPackage = async (req, res) => {
     const { id } = req.params;
-    const { name, location, duration, destinations, price, description, inclusions, exclusions, itinerary, images, slug } = JSON.parse(req.body.data);
+    const { name, location, duration, destinations, price, description, inclusions, exclusions, itinerary, img, images, isActive, slug } = JSON.parse(req.body.data);
     if (!name || !location || !duration || !destinations || !price || !description) {
         return res.status(400).json({ message: "Please fill the required fields" });
     }
@@ -61,10 +69,16 @@ export const modifyPackage = async (req, res) => {
             console.log("No Public Ids");
         }
 
-        const files = req.files ? await upload(req) : [];
+        const files = req.files && req.files.images ? await upload(req.files.images) : [];
         files.forEach((f) => {
             f.publicId = f.public_id;
             delete f.public_id;
+        });
+
+        const thumbnail = req.files && req.files.thumbnail ? await upload(req.files.thumbnail) : [];
+        thumbnail.forEach((img) => {
+            img.publicId = img.public_id;
+            delete img.public_id;
         });
         const updatedPackage = {
             name,
@@ -73,18 +87,19 @@ export const modifyPackage = async (req, res) => {
             destinations,
             price,
             description,
-            img: files[0] || {},
+            img: thumbnail.length === 0 ? img : thumbnail[0],
             images: [...filteredImages, ...files],
             inclusions,
             exclusions,
             itinerary,
-            slug
+            slug,
+            isActive
         };
         const pkg = await updatePackageById(id, updatedPackage);
         console.log("success");
         return res.status(200).json({ message: "Package updated successfully", package: pkg });
     } catch (error) {
-        console.error("Error Updating Package : ", error.message)
+        console.error("Error Updating Package : ", error)
         return res.status(500).json({ message: "Error updating package", error: error });
     }
 }

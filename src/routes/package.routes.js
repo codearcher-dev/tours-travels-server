@@ -4,10 +4,10 @@ import { upload } from "../config/cloudinary.js";
 
 const router = Router();
 
-router.route("/").post(upload.array('images', 10), createPackage);
+router.route("/").post(upload.fields([{ name: 'images', maxCount: 10 }, { name: 'thumbnail', maxCount: 1 }]), createPackage);
 router.route("/").get(getAllPackages);
 router.route("/:id").get(getOnePackage);
-router.route("/:id").patch(upload.array('images', 10), modifyPackage);
+router.route("/:id").patch(upload.fields([{ name: 'images', maxCount: 10 }, { name: 'thumbnail', maxCount: 1 }]), modifyPackage);
 router.route("/:id").delete(deletePackage);
 
 const packageRouter = router;

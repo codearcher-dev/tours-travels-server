@@ -28,7 +28,7 @@ export const createNewDestination = async (req, res) => {
         return res.status(400).json({ message: "Please fill the required fields" });
     }
     try {
-        const images = req.files ? await upload(req) : [];
+        const images = req.files ? await upload(req.files) : [];
         images.forEach((img) => {
             img.publicId = img.public_id;
             delete img.public_id;
@@ -67,8 +67,9 @@ export const updateDestination = async (req, res) => {
         } else {
             console.log("No Public Ids");
         }
+        console.log(req.files);
 
-        const files = req.files ? await upload(req) : [];
+        const files = req.files ? await upload(req.files) : [];
         files.forEach((f) => {
             f.publicId = f.public_id;
             delete f.public_id;
@@ -79,6 +80,7 @@ export const updateDestination = async (req, res) => {
             places,
             images: [...filteredImages, ...files]
         }
+
 
         const destination = await updateDestinationById(id, data);
         return res.status(200).json({ message: "Destination updated successfully", destination });
