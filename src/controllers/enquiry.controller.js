@@ -3,7 +3,6 @@ import { updateGlobalStatField, updateInsightField } from "../services/insight.s
 
 export const handleCreateEnquiry = async (req, res) => {
     const data = req.body;
-    console.log(data);
     try {
         const enquiry = await createEnquiry(data);
         if (enquiry) {
@@ -18,8 +17,6 @@ export const handleCreateEnquiry = async (req, res) => {
 
 export const handleRemoveEnquiry = async (req, res) => {
     const { id } = req.params;
-
-    console.log(id);
     try {
         const enquiry = await deleteEnquiry(id);
         return res.status(200).json({ message: "Enquiry deleted", enquiry });
@@ -29,8 +26,6 @@ export const handleRemoveEnquiry = async (req, res) => {
 }
 export const handleGetEnquiries = async (req, res) => {
     const { limit, offset, status, search } = req.query;
-
-    console.log(req.query);
 
     try {
         const enquiries = await findEnquiry(limit, offset, status, search);

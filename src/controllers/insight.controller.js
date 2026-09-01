@@ -30,7 +30,6 @@ export const handlePageVisit = async (req, res) => {
         await updateGlobalStatField("pageViews");
         return res.status(200).json({ message: "views updated" })
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error.message })
     }
 }

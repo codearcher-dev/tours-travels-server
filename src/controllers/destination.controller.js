@@ -44,7 +44,6 @@ export const createNewDestination = async (req, res) => {
         if (destination) {
             await updateGlobalStatField("destinations");
         }
-        console.log("success");
         return res.status(200).json({ message: "Destination created successfully", destination });
     } catch (error) {
         console.error(error.message);
@@ -61,13 +60,9 @@ export const updateDestination = async (req, res) => {
     const publicIds = req.body.public_id.split(',');
     const filteredImages = images.filter((i) => Object.keys(i).length > 0);
     try {
-        if (publicIds.length > 0) {
-            const result = await deleteImages(publicIds);
-            console.log("Result : ", result)
-        } else {
-            console.log("No Public Ids");
+        if (publicIds.length > 0 && publicIds[0] !== "") {
+            await deleteImages(publicIds);
         }
-        console.log(req.files);
 
         const files = req.files ? await upload(req.files) : [];
         files.forEach((f) => {
@@ -94,10 +89,7 @@ export const removeDestination = async (req, res) => {
     try {
         const publicIds = await findPublicIds(id);
         if (publicIds.length > 0) {
-            const result = await deleteImages(publicIds);
-            console.log(result);
-        } else {
-            console.log("Not provided");
+            await deleteImages(publicIds);
         }
         const destination = await deleteDestinationById(id);
         return res.status(200).json({ message: "Destination removed successfully", destination })

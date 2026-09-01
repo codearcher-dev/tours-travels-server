@@ -62,11 +62,9 @@ export const modifyPackage = async (req, res) => {
     const filteredImages = images.filter((i) => Object.keys(i).length > 0);
 
     try {
-        if (publicIds.length > 0) {
+        if (publicIds.length > 0 && publicIds[0] !== "") {
             const result = await deleteImages(publicIds);
-            console.log("Result : ", result)
-        } else {
-            console.log("No Public Ids");
+            console.log("Result : ", result);
         }
 
         const files = req.files && req.files.images ? await upload(req.files.images) : [];

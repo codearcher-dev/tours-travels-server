@@ -47,13 +47,14 @@ app.use("/api/insight", insightRouter);
 cron.schedule('0 0 0 * * *', async () => {
     try {
         const insight = await storeInsight();
-        console.log(insight);
     } catch (error) {
         console.error(error)
     }
 }, { timezone: 'Asia/Kolkata' });
 
-
+app.use((err, req, res, next) => {
+    return res.status(500).json({ message: err.message });
+});
 
 const port = process.env.PORT || 3000;
 
