@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const feedbackSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    package: { type: mongoose.Schema.Types.ObjectId, ref: "Package" },
+    package: { type: String, required: true },
     feedback: [{
         question: { type: String },
         rating: { type: Number, enum: [1, 2, 3, 4, 5], required: true }
