@@ -63,8 +63,7 @@ export const modifyPackage = async (req, res) => {
 
     try {
         if (publicIds.length > 0 && publicIds[0] !== "") {
-            const result = await deleteImages(publicIds);
-            console.log("Result : ", result);
+            await deleteImages(publicIds);
         }
 
         const files = req.files && req.files.images ? await upload(req.files.images) : [];
@@ -94,7 +93,6 @@ export const modifyPackage = async (req, res) => {
             isActive
         };
         const pkg = await updatePackageById(id, updatedPackage);
-        console.log("success");
         return res.status(200).json({ message: "Package updated successfully", package: pkg });
     } catch (error) {
         console.error("Error Updating Package : ", error)
@@ -125,12 +123,8 @@ export const deletePackage = async (req, res) => {
     const { id } = req.params;
     try {
         const publicIds = await findPublicIds(id);
-        console.log("Public Ids : ", publicIds);
         if (publicIds.length > 0) {
-            const result = await deleteImages(publicIds);
-            console.log(result);
-        } else {
-            console.log("Not provided");
+            await deleteImages(publicIds);
         }
         const pkg = await deletePackageById(id);
         return res.status(200).json({ message: "Package deleted successfully", package: pkg });
