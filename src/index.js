@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: ['https://tours-travels-react.onrender.com',
         'https://tours-travels-admin-axch.onrender.com',
-        'https://primetraveller.in',
+        'https://www.primetraveller.in',
         'https://admin.primetraveller.in'],
     credentials: true
 }));
