@@ -20,6 +20,8 @@ import { storeInsight } from "./services/insight.services.js";
 const app = express();
 connectDB();
 
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({

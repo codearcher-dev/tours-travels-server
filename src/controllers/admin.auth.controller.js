@@ -36,7 +36,7 @@ export const loginAdmin = async (req, res) => {
         }
 
         const { accessToken, refreshToken } = await authenticateAdmin(req, res, admin);
-        res.status(200).json({ message: "Login successful", accessToken, refreshToken });
+        res.status(200).json({ message: "Login successful", user: { ...admin.toObject(), password: undefined } });
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
