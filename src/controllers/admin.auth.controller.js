@@ -1,5 +1,5 @@
 import AdminModel from "../models/admin.schema.js";
-import { createAdmin, getAdminByEmail, getAllAdmins } from "../services/admin.services.js";
+import { createAdmin, getAdminByEmail, getAllAdmins, updatePasswordByEmail } from "../services/admin.services.js";
 import { authenticateAdmin } from "../services/auth.services.js";
 import { verifyPassword } from "../services/bcrypt.services.js";
 import { deleteSessionById } from "../services/session.services.js";
@@ -66,5 +66,26 @@ export const getAdmin = async (req, res) => {
         return res.status(200).json({ user: admin });
     } catch (error) {
         res.status(500).json({ message: "Error fetching admin", error: error.message });
+    }
+}
+
+export const changePassword = async (req, res) => {
+    const { email } = req.user;
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        const admin = await getAdminByEmail(email);
+        if (!admin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        if (!verifyPassword(oldPassword, admin.password)) {
+            return res.status(401).json({ message: "Invalid old password" });
+        }
+
+        await updatePasswordByEmail(email, newPassword);
+        res.status(200).json({ message: "Password changed successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error changing password", error: error.message });
     }
 }

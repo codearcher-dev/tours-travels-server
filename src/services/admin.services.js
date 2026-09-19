@@ -15,3 +15,12 @@ export const createAdmin = async (name, email, password) => {
     const admin = await AdminModel.create({ name, email, password: hashPassword(password) });
     return admin;
 }
+
+export const updatePasswordByEmail = async (email, newPassword) => {
+    const updatedAdmin = await AdminModel.findOneAndUpdate(
+        { email },
+        { password: hashPassword(newPassword) },
+        { returnDocument: 'after' }
+    );
+    return updatedAdmin;
+}
