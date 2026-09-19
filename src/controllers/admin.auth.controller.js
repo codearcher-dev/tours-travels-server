@@ -46,8 +46,13 @@ export const logoutAdmin = async (req, res) => {
     try {
         const refreshToken = req.cookies.refresh_token;
         await deleteSessionById(refreshToken.sessionId);
-        res.clearCookie("access_token");
-        res.clearCookie("refresh_token");
+        const baseConfig = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None"
+        }
+        res.clearCookie("access_token", baseConfig);
+        res.clearCookie("refresh_token", baseConfig);
         return res.status(200).json({ message: "Logout successful" });
     } catch (error) {
         res.status(500).json({ message: "Error logging out", error: error.message });
