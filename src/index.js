@@ -42,6 +42,7 @@ app.use("/api/enquiry", enquiryRouter);
 app.use("/api/insight", insightRouter);
 
 app.get("/api/ping", (req, res) => {
+    console.log("Ping received");
     return res.status(200).json({ message: "alive" });
 });
 
