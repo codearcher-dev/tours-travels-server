@@ -30,10 +30,7 @@ app.use(cors({
         "http://localhost:5173", "http://localhost:5174"],
     credentials: true
 }));
-app.use((req, res, next) => {
-    console.log(`${req.method}, ${req.url}`);
-    next();
-})
+
 app.use(cookieParser());
 //Verifyauthentication middleware not implemented yet
 
@@ -44,7 +41,9 @@ app.use("/api/feedback", feedbackRouter);
 app.use("/api/enquiry", enquiryRouter);
 app.use("/api/insight", insightRouter);
 
-
+app.get("/api/ping", (req, res) => {
+    return res.status(200).json({ message: "alive" });
+});
 
 // Schedule a task to run every 12 AM
 cron.schedule('0 0 0 * * *', async () => {
