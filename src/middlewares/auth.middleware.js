@@ -6,6 +6,8 @@ const verifyAuthentication = (req, res, next) => {
     const refreshToken = req.cookies.refresh_token;
     req.user = null;
 
+    console.log(accessToken, refreshToken);
+
     if (accessToken) {
         const decodedToken = verifyJwtToken(accessToken);
         req.user = decodedToken;
@@ -16,6 +18,9 @@ const verifyAuthentication = (req, res, next) => {
         try {
             const { newAccessToken, newRefreshToken, user } = refreshTokens(refreshToken);
             req.user = user;
+
+
+            console.log(newAccessToken, newRefreshToken, user);
 
             const baseConfig = {
                 httpOnly: true,
