@@ -2,7 +2,6 @@ import "dotenv/config"
 import express from 'express';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
 import cron from 'node-cron';
 
 import connectDB from './config/db.js';
@@ -27,17 +26,15 @@ app.use(cors({
     origin: ['https://tours-travels-react.onrender.com',
         'https://tours-travels-admin-axch.onrender.com',
         'https://www.primetraveller.in',
-        'https://admin.primetraveller.in'],
+        'https://admin.primetraveller.in',
+        "http://localhost:5173", "http://localhost:5174"],
     credentials: true
 }));
+app.use((req, res, next) => {
+    console.log(`${req.method}, ${req.url}`);
+    next();
+})
 app.use(cookieParser());
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set to true if using HTTPS
-}));
-
 //Verifyauthentication middleware not implemented yet
 
 app.use("/api/package", packageRouter);
