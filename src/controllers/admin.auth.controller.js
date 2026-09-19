@@ -43,9 +43,9 @@ export const loginAdmin = async (req, res) => {
 }
 
 export const logoutAdmin = async (req, res) => {
-    const { sessionId } = req.user;
     try {
-        await deleteSessionById(sessionId);
+        const refreshToken = req.cookies.refresh_token;
+        await deleteSessionById(refreshToken.sessionId);
         res.clearCookie("access_token");
         res.clearCookie("refresh_token");
         return res.status(200).json({ message: "Logout successful" });
