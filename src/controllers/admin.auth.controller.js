@@ -2,6 +2,7 @@ import AdminModel from "../models/admin.schema.js";
 import { createAdmin, getAdminByEmail, getAllAdmins } from "../services/admin.services.js";
 import { authenticateAdmin } from "../services/auth.services.js";
 import { verifyPassword } from "../services/bcrypt.services.js";
+import { deleteSessionById } from "../services/session.services.js";
 
 export const registerAdmin = async (req, res) => {
     const { name, email, password } = req.body;
@@ -38,5 +39,16 @@ export const loginAdmin = async (req, res) => {
         res.status(200).json({ message: "Login successful", accessToken, refreshToken });
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error: error.message });
+    }
+}
+
+export const logoutAdmin = async (req, res) => {
+    try {
+        await deleteSessionById(req.user.sessionId);
+        res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
+        return res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+        res.status(500).json({ message: "Error logging out", error: error.message });
     }
 }
