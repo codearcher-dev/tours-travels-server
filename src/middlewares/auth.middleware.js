@@ -16,7 +16,7 @@ const verifyAuthentication = (req, res, next) => {
 
     if (refreshToken) {
         try {
-            const { newAccessToken, newRefreshToken, user } = refreshTokens(refreshToken);
+            const { newAccessToken, newRefreshToken, user } = await refreshTokens(refreshToken);
             req.user = user;
 
 
