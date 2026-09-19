@@ -56,8 +56,8 @@ export const logoutAdmin = async (req, res) => {
 export const getAdmin = async (req, res) => {
     const { email } = req.user;
     try {
-        const admin = await getAdminByEmail(req.user.email);
-        return res.status(200).json({ admin });
+        const admin = await getAdminByEmail(email);
+        return res.status(200).json({ user: admin });
     } catch (error) {
         res.status(500).json({ message: "Error fetching admin", error: error.message });
     }
