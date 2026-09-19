@@ -4,9 +4,9 @@ import verifyAuthentication from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.route("/register").post(registerAdmin);
+router.route("/register").post(verifyAuthentication, registerAdmin);
 router.route("/login").post(loginAdmin);
-router.route("/logout").post(logoutAdmin);
+router.route("/logout").post(verifyAuthentication, logoutAdmin);
 router.route("/").get(verifyAuthentication, getAdmin);
 
 const adminAuthRouter = router;
