@@ -19,7 +19,7 @@ export const deleteFeedback = async (id) => {
 
 export const createLink = async (packageName, questions) => {
     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const url = `https://primetraveller.in/feedback/${token}`;
+    const url = `https://www.primetraveller.in/feedback/${token}`;
     const feedbackLink = await FeedbackLinkModel.create({ package: packageName, questions, token, url });
     return feedbackLink;
 }
