@@ -62,7 +62,6 @@ export const getFeedbackLink = async (req, res) => {
     const token = req.params.token;
     try {
         const link = await findFeedbackLinkByToken(token);
-        console.log(link);
         return res.status(200).json({ message: "Feedback link fetched successfully", link })
     } catch (error) {
         return res.status(500).json({ message: error.message });

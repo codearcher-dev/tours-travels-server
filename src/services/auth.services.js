@@ -38,7 +38,6 @@ export const refreshTokens = async (refreshToken) => {
         const currentSession = await findSessionById(decodedToken.sessionId)
 
         if (!currentSession) {
-            console.log("Invalid session");
             throw new Error("Invalid session");
         }
 
@@ -52,15 +51,9 @@ export const refreshTokens = async (refreshToken) => {
             email: user.email,
             sessionId: currentSession.sessionId,
         }
-
         const newAccessToken = generateAccessToken(userData);
         const newRefreshToken = generateRefreshToken({ sessionId: currentSession.sessionId })
-
-        console.log("New Access Token: ", newAccessToken);
-        console.log("New Refresh Token: ", newRefreshToken);
-
         return { newAccessToken, newRefreshToken, user: userData }
-
     }
     catch (error) {
         throw new Error("Error generating new tokens: ", error);
