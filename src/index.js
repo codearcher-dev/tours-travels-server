@@ -29,7 +29,9 @@ app.use(cors({
         'https://tours-travels-admin-axch.onrender.com',
         'https://www.primetraveller.in',
         'https://admin.primetraveller.in',
-        "http://localhost:5173", "http://localhost:5174"],
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://localhost"],
     credentials: true
 }));
 
