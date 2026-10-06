@@ -13,7 +13,10 @@ const adminSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    fcmToken: [
+        { type: String }
+    ]
 }, { timestamps: true });
 
 const AdminModel = mongoose.model('admin', adminSchema);

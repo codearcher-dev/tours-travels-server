@@ -23,7 +23,8 @@ export const registerAdmin = async (req, res) => {
 }
 
 export const loginAdmin = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, fcmToken } = req.body;
+    console.log("FCM : ", fcmToken);
 
     try {
         const admin = await getAdminByEmail(email);
@@ -36,6 +37,13 @@ export const loginAdmin = async (req, res) => {
         }
 
         const { accessToken, refreshToken } = await authenticateAdmin(req, res, admin);
+        console.log("Access Token:", accessToken);
+
+        if (fcmToken && !admin.fcmToken.includes(fcmToken)) {
+            admin.fcmToken.push(fcmToken);
+            await admin.save();
+        }
+
         res.status(200).json({ message: "Login successful", user: { ...admin.toObject(), password: undefined } });
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error: error.message });

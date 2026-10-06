@@ -12,7 +12,7 @@ export const getAdminByEmail = async (email) => {
 }
 
 export const createAdmin = async (name, email, password) => {
-    const admin = await AdminModel.create({ name, email, password: hashPassword(password) });
+    const admin = await AdminModel.create({ name, email, password: hashPassword(password), fcmToken: [] });
     return admin;
 }
 
