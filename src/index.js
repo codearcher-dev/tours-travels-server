@@ -132,11 +132,12 @@ cron.schedule('0 0 0 * * *', async () => {
     try {
         const insight = await storeInsight();
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 }, { timezone: 'Asia/Kolkata' });
 
 app.use((err, req, res, next) => {
+    console.log("Error:", err.message);
     return res.status(500).json({ message: err.message });
 });
 
