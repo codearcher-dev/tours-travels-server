@@ -22,6 +22,7 @@ import { storeInsight } from "./services/insight.services.js";
 import { getMessaging } from "firebase-admin/messaging";
 import { getAllAdmins } from "./services/admin.services.js";
 import intializeFirebase from "./config/firebase.config.js";
+import AdminModel from "./models/admin.schema.js";
 
 const app = express();
 connectDB();
@@ -30,7 +31,7 @@ intializeFirebase();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ['https://tours-travels-react.onrender.com',
+    origin: [
         'https://tours-travels-admin-axch.onrender.com',
         'https://www.primetraveller.in',
         'https://admin.primetraveller.in',
@@ -61,13 +62,21 @@ app.post('/api/push-notification', async (req, res) => {
 
     try {
         const admins = await getAllAdmins();
-        console.log("Admins: ", admins[0].fcmToken[admins[0].fcmToken.length - 1]);
+        let tokens = [];
+        admins.forEach(admin => {
+            admin.fcmToken.forEach(token => tokens.push(token));
+        });
+
+        if (tokens.length === 0) {
+            return res.status(400).json({ success: false, message: "No tokens available" });
+        }
+
         const message = {
             notification: {
-                title: title || "Test Notification",
-                body: body || "This is a test Notification"
+                title: title || "Notification",
+                body: body || "New notification recieved",
             },
-            token: admins[0].fcmToken[admins[0].fcmToken.length - 1],
+            tokens,
             data: {
                 route: "/enquiries",
             },
@@ -81,8 +90,35 @@ app.post('/api/push-notification', async (req, res) => {
                 }
             }
         }
-        const response = await getMessaging().send(message);
+
+        console.log("tokens : ", message.tokens);
+
+        const response = await getMessaging().sendEachForMulticast(message);
         console.log("Successfully sent message:", response);
+
+        const invalidTokens = [];
+
+        response.responses.forEach((resp, idx) => {
+            if (!resp.success) {
+                const errorCode = resp.error?.code;
+                if (
+                    errorCode === 'messaging/invalid-registration-token' ||
+                    errorCode === 'messaging/registration-token-not-registered'
+                ) {
+                    invalidTokens.push(message.tokens[idx]);
+                }
+            }
+        });
+
+        if (invalidTokens.length > 0) {
+            await AdminModel.updateMany(
+                { fcmToken: { $in: invalidTokens } },
+                { $pull: { fcmToken: { $in: invalidTokens } } }
+            );
+        }
+
+        console.log("Invalid tokens:", invalidTokens);
+
         return res.status(200).json({ success: true, messageId: response });
     } catch (error) {
         console.error("Error sending message:", error);
