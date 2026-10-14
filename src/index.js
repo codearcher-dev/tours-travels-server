@@ -90,14 +90,8 @@ app.post('/api/push-notification', async (req, res) => {
                 }
             }
         }
-
-        console.log("tokens : ", message.tokens);
-
         const response = await getMessaging().sendEachForMulticast(message);
-        console.log("Successfully sent message:", response);
-
         const invalidTokens = [];
-
         response.responses.forEach((resp, idx) => {
             if (!resp.success) {
                 const errorCode = resp.error?.code;
@@ -117,11 +111,8 @@ app.post('/api/push-notification', async (req, res) => {
             );
         }
 
-        console.log("Invalid tokens:", invalidTokens);
-
         return res.status(200).json({ success: true, messageId: response });
     } catch (error) {
-        console.error("Error sending message:", error);
         return res.status(500).json({ success: false, error: error.message })
     }
 })
@@ -137,7 +128,6 @@ cron.schedule('0 0 0 * * *', async () => {
 }, { timezone: 'Asia/Kolkata' });
 
 app.use((err, req, res, next) => {
-    console.log("Error:", err.message);
     return res.status(500).json({ message: err.message });
 });
 
